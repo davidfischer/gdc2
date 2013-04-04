@@ -1,0 +1,28 @@
+__pycache__/
+*.py[co]
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+docs/_build/
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+.cache
+
+#Translations
+*.mo
