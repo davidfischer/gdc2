@@ -26,3 +26,6 @@ pip-log.txt
 
 #Translations
 *.mo
+
+# Ignore localsettings.py file where private/secret data goes
+localsettings.py
