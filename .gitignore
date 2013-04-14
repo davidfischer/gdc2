@@ -29,3 +29,6 @@ pip-log.txt
 
 # Ignore localsettings.py file where private/secret data goes
 localsettings.py
+
+# Ignore database files
+*.db
