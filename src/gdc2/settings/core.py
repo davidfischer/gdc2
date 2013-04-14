@@ -112,6 +112,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+
+    'timeline',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -154,6 +156,11 @@ LOGGING = {
             'propagate': True,
         },
         'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'timeline': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,
