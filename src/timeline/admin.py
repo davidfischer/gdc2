@@ -1,5 +1,5 @@
 from django.contrib import admin
-from models import GithubEvent, Actor, Repository
+from models import GithubEvent, Actor, Repository, Location
 
 
 class GithubEventAdmin(admin.ModelAdmin):
@@ -12,7 +12,13 @@ class GithubEventAdmin(admin.ModelAdmin):
 class ActorAdmin(admin.ModelAdmin):
     list_display = ('username', 'actor_type', 'location')
     list_filter = ('actor_type',)
-    search_fields = ['username', 'location']
+    search_fields = ['username', 'location__location']
+    list_per_page = 1000
+
+
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ('location', 'lat', 'lng')
+    search_fields = ['location']
     list_per_page = 1000
 
 
@@ -25,4 +31,5 @@ class RepsoitoryAdmin(admin.ModelAdmin):
 
 admin.site.register(GithubEvent, GithubEventAdmin)
 admin.site.register(Actor, ActorAdmin)
+admin.site.register(Location, LocationAdmin)
 admin.site.register(Repository, RepsoitoryAdmin)

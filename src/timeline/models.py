@@ -87,11 +87,29 @@ class Repository(models.Model):
         verbose_name_plural = "repositories"
 
 
+class Location(models.Model):
+    location = models.CharField(max_length=1024, unique=True)
+    lat = models.FloatField(null=True, blank=True)
+    lng = models.FloatField(null=True, blank=True)
+
+    is_invalid = models.BooleanField(default=False, help_text='True if the location can not be geolocated')
+
+    # Fields to keep track of when data was imported
+    dbentry_create_date = models.DateTimeField(auto_now_add=True)
+    dbentry_mod_date = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+    def __unicode__(self):
+        if self.lat is not None and self.lng is not None:
+            return u'{0} ({1:.3f}, {1:.3f})'.format(self.location, self.lat, self.lng)
+        else:
+            return self.location
+
+
 class Actor(models.Model):
     username = models.CharField(max_length=1024, unique=True)
     gravatar_id = models.CharField(max_length=1024, null=True, default=None, blank=True)
     actor_type = models.CharField(max_length=1024, null=True, default=None, blank=True)
-    location = models.CharField(max_length=1024, null=True, default=None, blank=True, db_index=True)
+    location = models.ForeignKey(Location, null=True, default=None, blank=True)
 
     # Fields to keep track of when data was imported
     dbentry_create_date = models.DateTimeField(auto_now_add=True)
@@ -113,6 +131,12 @@ class Actor(models.Model):
     def from_archive(archive):
         username = archive.get('login')
 
+        loc = archive.get('location')
+        if loc is not None and loc.strip() != '':
+            location, _ = Location.objects.get_or_create(location=loc.strip())
+        else:
+            location = None
+
         if username is not None and username.strip() != '':
             actor, created = Actor.objects.get_and_update_or_create(
                     unique_fields = {
@@ -121,7 +145,7 @@ class Actor(models.Model):
                     update_fields = {
                         'gravatar_id': archive.get('gravatar_id'),
                         'actor_type': archive.get('type'),
-                        'location': archive.get('location'),
+                        'location': location,
                     },
                 )
             return actor
