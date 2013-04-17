@@ -1,4 +1,4 @@
-Github Data Challenge II
+GitHub Data Challenge II
 ========================
 
 Credits
