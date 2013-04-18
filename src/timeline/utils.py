@@ -10,7 +10,7 @@ try:
 except IndexError:
     USER_AGENT = 'github-data-challenge'
 
-NOMINATIM_URL = 'http://nominatim.openstreetmap.org/search?q={query}&format=json&limit=1'
+NOMINATIM_URL = 'http://nominatim.openstreetmap.org/search'
 TIMEOUT = 30    # seconds
 
 def nominatim(location):
@@ -18,12 +18,15 @@ def nominatim(location):
     Returns a lat/lng pair for a location or None
     """
 
-    args = {'query': location}
-    url = NOMINATIM_URL.format(**args)
+    args = {
+        'q': location,
+        'format': 'json',
+        'limit': '1',
+    }
     headers = {'User-Agent': USER_AGENT}
 
     try:
-        resp = requests.get(url, headers=headers, timeout=TIMEOUT)
+        resp = requests.get(NOMINATIM_URL, params=args, headers=headers, timeout=TIMEOUT)
     except Exception:
         logger.error('Request timeout for {0}'.format(location))
         return None
@@ -40,7 +43,7 @@ def nominatim(location):
 
     return None
 
-def lookup(location):
+def geocode(location):
     """
     Returns a lat/lng pair for a location or None
     """
