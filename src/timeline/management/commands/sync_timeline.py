@@ -70,7 +70,7 @@ class Command(NoArgsCommand):
             self.do_catchup()
 
         if self.records > 0:
-            sys.stdout.write('Saved {0} new records'.format(self.records))
+            sys.stdout.write('Saved {0} new records\n'.format(self.records))
 
     def do_year(self, year):
         if year < 2011 or year > 2020:
