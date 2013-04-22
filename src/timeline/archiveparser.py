@@ -3,7 +3,7 @@ import logging
 from cStringIO import StringIO
 
 import requests
-import ijson.backends.yajl2 as ijson
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,6 @@ class GithubArchiveParser(object):
         githubarchive.org
 
         @raises IOError on invalid gzip archive file
-        @raises ijson.JSONError on invalid JSON
         '''
 
         resp = self._fetch()
@@ -71,6 +70,8 @@ class GithubArchiveParser(object):
         # Raises IOError on invalid gzipped file
         opener = gzip.GzipFile(fileobj=StringIO(resp.content))
 
-        # Raises ijson.JSONError on invalid JSON
-        for obj in ijson.common.items(ijson.parse(opener, multiple_values=True), ''):
-            yield obj
+        for i, line in enumerate(opener):
+            try:
+                yield json.loads(line)
+            except ValueError:
+                logger.exception('JSON parse error on line: {0}\n{1}'.format(i, line))

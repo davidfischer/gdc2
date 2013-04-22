@@ -7,7 +7,3 @@ six==1.3.0
 
 # PROD database connections - requires postgres headers
 psycopg2==2.5
-
-# Install an unreleased version for ijson
-# The main feature required is yajl multiple value support
--e git://github.com/isagalaev/ijson.git@07aad2da7d33447fa60d3519acc82c12b518420b#egg=ijson-dev
