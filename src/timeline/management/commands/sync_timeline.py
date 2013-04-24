@@ -4,6 +4,9 @@ import logging
 import sys
 
 from django.core.management.base import NoArgsCommand, CommandError
+from django.utils.timezone import now
+import pytz
+from datetime import timedelta
 
 from timeline.models import Actor, Repository, GithubEvent
 from timeline.archiveparser import GithubArchiveParser
@@ -99,13 +102,33 @@ class Command(NoArgsCommand):
 
         archive = GithubArchiveParser(year, month, day, hour)
 
-        for record in archive.parse():
-            event = GithubEvent.from_archive(record)
+        try:
+            for record in archive.parse():
+                event = GithubEvent.from_archive(record)
 
-            # We keep track of only a subset of events
-            # Specifically we aren't looking at gists for example
-            if event is not None:
-                self.records += 1
+                # We keep track of only a subset of events
+                # Specifically we aren't looking at gists for example
+                if event is not None:
+                    self.records += 1
+        except Exception:
+            logger.exception('Error processing {0}-{1}-{2}-{3}'.format(year, month, day, hour))
 
     def do_catchup(self):
-        raise NotImplementedError('Pull requests welcome')
+        # sadly githubarchive uses Pacific time instead of UTC
+        # There is a DST bug here during "negative time"
+        # See: https://github.com/igrigorik/githubarchive.org/issues/33
+        pacific = pytz.timezone('US/Pacific')
+
+        events = GithubEvent.objects.order_by('-created_at').values('created_at')[:1]
+        if len(events) > 0:
+            # Start processing at the next hour after the latest event
+            # Sometimes githubarchive records go into the next hour by a couple mins
+            # See: https://github.com/igrigorik/githubarchive.org/issues/23
+            last_event = pacific.normalize(events[0]['created_at']) + timedelta(minutes=45)
+        else:
+            # By default, process the last 90 days
+            last_event = pacific.normalize(now()) - timedelta(days=90)
+
+        while last_event < (pacific.normalize(now()) - timedelta(hours=6)):
+            self.do_hour(last_event.year, last_event.month, last_event.day, last_event.hour)
+            last_event += timedelta(hours=1)
