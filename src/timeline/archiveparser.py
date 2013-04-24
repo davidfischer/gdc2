@@ -71,6 +71,9 @@ class GithubArchiveParser(object):
         opener = gzip.GzipFile(fileobj=StringIO(resp.content))
 
         for i, line in enumerate(opener):
+            # There are occasionally records with invalid utf-8
+            # See: https://github.com/igrigorik/githubarchive.org/issues/25
+            line = line.decode('utf-8', errors='ignore')
             try:
                 yield json.loads(line)
             except ValueError:
