@@ -1,1 +1,23 @@
 {% extends "visualize/base.html" %}
+
+
+{% block main %}
+<h1>Where does open source come from?</h1>
+
+<div id="language-selector" class="btn-group">
+  <button class="btn">JavaScript</button>
+  <button class="btn">Ruby</button>
+  <button class="btn">Java</button>
+  <button class="btn">Python</button>
+  <button class="btn">PHP</button>
+  <button class="btn">C</button>
+  <button class="btn">C++</button>
+  <button class="btn">Objective-C</button>
+  <button class="btn">Shell</button>
+  <button class="btn">C#</button>
+</div>
+
+<div id="language-visualization">
+</div>
+
+{% endblock main %}
