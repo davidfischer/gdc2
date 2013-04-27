@@ -1,4 +1,8 @@
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Max
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 
@@ -15,3 +19,14 @@ def status(request):
         {
             'latest_event': GithubEvent.objects.aggregate(Max('created_at'))['created_at__max'],
         })
+
+@cache_page(60 * 30)
+def language(request, lang):
+    events = GithubEvent.objects.filter(
+        repository__language=lang).filter(
+        repository__is_fork=False).exclude(
+        actor__location__lat=None).exclude(
+        actor__location__lng=None).select_related()
+    data = [dict(e) for e in events]
+
+    return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type='application/json')
