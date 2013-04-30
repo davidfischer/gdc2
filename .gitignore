@@ -27,8 +27,11 @@ pip-log.txt
 #Translations
 *.mo
 
-# Ignore localsettings.py file where private/secret data goes
-localsettings.py
 
-# Ignore database files
-*.db
+# Ignore configuration
+client_secrets.json
+bigquery.json
+bigquery.p12
+
+# Ignore virtualenv
+venv
