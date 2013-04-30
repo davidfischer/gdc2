@@ -33,7 +33,17 @@ class GetAndUpdateManager(models.Manager):
         return instance, False
 
 
-class Repository(models.Model):
+class DictMixin(object):
+    def __getitem__(self, key):
+        val = getattr(self, key)
+        if callable(val):
+            return val()
+        elif isinstance(val, models.Model):
+            return dict(val)
+        return val
+
+
+class Repository(models.Model, DictMixin):
     url = models.CharField(max_length=1024, unique=True)
     name = models.CharField(max_length=1024, db_index=True)
 
@@ -47,6 +57,9 @@ class Repository(models.Model):
     dbentry_mod_date = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     objects = GetAndUpdateManager()
+
+    def keys(self):
+        return ['url', 'name', 'owner', 'is_fork', 'language', 'github_url']
 
     def github_url(self):
         return 'https://github.com/{0}/{1}'.format(self.owner, self.name)
@@ -87,7 +100,7 @@ class Repository(models.Model):
         verbose_name_plural = "repositories"
 
 
-class Location(models.Model):
+class Location(models.Model, DictMixin):
     location = models.CharField(max_length=1024, unique=True)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
@@ -98,6 +111,9 @@ class Location(models.Model):
     dbentry_create_date = models.DateTimeField(auto_now_add=True)
     dbentry_mod_date = models.DateTimeField(auto_now=True, auto_now_add=True)
 
+    def keys(self):
+        return ['location', 'lat', 'lng']
+
     def __unicode__(self):
         if self.lat is not None and self.lng is not None:
             return u'{0} ({1:.3f}, {1:.3f})'.format(self.location, self.lat, self.lng)
@@ -105,7 +121,7 @@ class Location(models.Model):
             return self.location
 
 
-class Actor(models.Model):
+class Actor(models.Model, DictMixin):
     username = models.CharField(max_length=1024, unique=True)
     gravatar_id = models.CharField(max_length=1024, null=True, default=None, blank=True)
     actor_type = models.CharField(max_length=1024, null=True, default=None, blank=True)
@@ -116,6 +132,9 @@ class Actor(models.Model):
     dbentry_mod_date = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     objects = GetAndUpdateManager()
+
+    def keys(self):
+        return ['username', 'gravatar_id', 'actor_type', 'location', 'github_url', 'gravatar_url']
 
     def gravatar_url(self, size=40):
         grav_id = self.gravatar_id or '0'
@@ -151,7 +170,7 @@ class Actor(models.Model):
             return actor
 
 
-class GithubEvent(models.Model):
+class GithubEvent(models.Model, DictMixin):
     created_at = models.DateTimeField(db_index=True)
     url = models.CharField(max_length=1024, null=True, default=None, blank=True)
     event_type = models.CharField(max_length=1024, null=True, default=None, blank=True)
@@ -162,6 +181,9 @@ class GithubEvent(models.Model):
     # Fields to keep track of when data was imported
     dbentry_create_date = models.DateTimeField(auto_now_add=True)
     dbentry_mod_date = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+    def keys(self):
+        return ['created_at', 'url', 'event_type', 'repository', 'actor', 'github_url']
 
     def __unicode__(self):
         return unicode(self.url)

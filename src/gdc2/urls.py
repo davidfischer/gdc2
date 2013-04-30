@@ -14,4 +14,5 @@ urlpatterns = patterns('',
 
     url(r'^$', 'visualize.views.index'),
     url(r'^status/$', 'visualize.views.status'),
+    url(r'^language/(?P<lang>[a-zA-Z0-9_\-\+\#]+).json$', 'visualize.views.language'),
 )
