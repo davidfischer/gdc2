@@ -150,23 +150,22 @@ def query(sql):
             "re-run the application to re-authorize")
 
 def groupby_location(data):
-    out = []
+    grouper = {}
     for d in data:
-        if d['location'] not in out:
-            out[d['location']] = {'name': d['location']}
-        out[d['location']][d['event_type']] = d['num_events']
-    return out
+        if d['location'] not in grouper:
+            grouper[d['location']] = {'name': d['location']}
+        grouper[d['location']][d['event_type']] = d['num_events']
 
-def attach_locations(data):
-    for d in data:
-        if d['location'] in LOCATIONS:
-            d['lat'] = LOCATIONS[d['location']]['lat']
-            d['lng'] = LOCATIONS[d['location']]['lng']
+    out = grouper.values()
+    for d in out:
+        if d['name'] in LOCATIONS:
+            d['lat'] = LOCATIONS[d['name']]['lat']
+            d['lng'] = LOCATIONS[d['name']]['lng']
         else:
             d['lat'] = None
             d['lng'] = None
 
-    return data
+    return out
 
 def fetch_geocodes(data):
     for d in data:
@@ -204,13 +203,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.repo_url:
-        data = attach_locations(list(query(REPOSITORY_QUERY.format(args.repo_url))))
+        data = groupby_location(list(query(REPOSITORY_QUERY.format(args.repo_url))))
     elif args.language:
-        data = attach_locations(list(query(LANGUAGE_QUERY.format(args.language))))
+        data = groupby_location(list(query(LANGUAGE_QUERY.format(args.language))))
     elif args.locations:
         data = fetch_geocodes(list(query(ALL_LOCATION_QUERY)))
     else:
-        data = attach_locations(list(query(ALL_LANGUAGE_QUERY)))
+        data = groupby_location(list(query(ALL_LANGUAGE_QUERY)))
 
     out = json.dumps(data, indent=1)
     if args.outfile:
