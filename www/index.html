@@ -48,6 +48,10 @@
   fill-opacity: 0.5;
 }
 
+.dot:hover {
+  fill: orange;
+}
+
 #tooltip p {
   clear: both;
   margin: 4px 0;
@@ -185,7 +189,7 @@ $(document).ready(function() {
     $("#" + $(this).attr("data-elem")).show();
   });
 
-  /*d3.json("rails_events_location.json", function(data) {
+  d3.json("data/repositories/twitter__bootstrap.json", function(data) {
     var scale = d3.scale.log().domain([1, 1000]).range([2, 15]);
 
     function contributions(d) {
@@ -220,7 +224,7 @@ $(document).ready(function() {
           .on("mouseout", function(d) {
             tooltip.style("display", "none");
         });
-  });*/
+  });
 });
 
 </script>
