@@ -74,7 +74,7 @@
 </style>
 
 
-<script>
+<script type="text/javascript">
 $(document).ready(function() {
   var GITHUB_EVENT_TYPES = [
     "GistEvent",
@@ -94,6 +94,74 @@ $(document).ready(function() {
     "PullRequestReviewCommentEvent",
     "PublicEvent",
     "ForkApplyEvent"
+  ];
+
+  var LANGUAGES = [
+    "All",
+    "JavaScript",
+    "Ruby",
+    "Java",
+    "Python",
+    "Shell",
+    "PHP",
+    "C",
+    "C++",
+    "Perl",
+    "Objective-C"
+  ];
+
+  var REPOSITORIES = [
+    "",
+    "twitter/bootstrap",
+    "octocat/Spoon-Knife",
+    "mxcl/homebrew",
+    "rails/rails",
+    "h5bp/html5-boilerplate",
+    "jquery/jquery",
+    "saasbook/hw3_rottenpotatoes",
+    "joyent/node",
+    "robbyrussell/oh-my-zsh",
+    "phonegap/phonegap-start",
+    "bartaz/impress.js",
+    "documentcloud/backbone",
+    "mbostock/d3",
+    "torvalds/linux",
+    "saasbook/hw4_rottenpotatoes",
+    "purplecabbage/phonegap-plugins",
+    "github/gitignore",
+    "wakaleo/game-of-life",
+    "EllisLab/CodeIgniter",
+    "symfony/symfony",
+    "jquery/jquery-ui",
+    "mrdoob/three.js",
+    "django/django",
+    "harvesthq/chosen",
+    "phonegap/phonegap-plugins",
+    "blueimp/jQuery-File-Upload",
+    "imathis/octopress",
+    "hakimel/reveal.js",
+    "zendframework/zf2",
+    "zurb/foundation",
+    "diaspora/diaspora",
+    "jquery/jquery-mobile",
+    "mojombo/jekyll",
+    "angular/angular.js",
+    "gitlabhq/gitlabhq",
+    "mathiasbynens/dotfiles",
+    "fdv/typo",
+    "TrinityCore/TrinityCore",
+    "adobe/brackets",
+    "git/git",
+    "AFNetworking/AFNetworking",
+    "addyosmani/todomvc",
+    "cloudhead/less.js",
+    "spree/spree",
+    "facebook/facebook-php-sdk",
+    "plataformatec/devise",
+    "saasbook/typo",
+    "FortAwesome/Font-Awesome",
+    "JakeWharton/ActionBarSherlock",
+    "facebook/three20"
   ];
 
   // Always in proportion of 960x500 for full size
@@ -151,45 +219,38 @@ $(document).ready(function() {
       .style("position", "absolute");
 
   // Load languages into clickable links
-  d3.json("data/languages.json", function(data) {
-    d3.select("#language-list").selectAll("li")
-      .data(data).enter()
-      .append("li")
-        .attr("class", function(d) { return d === "All"?"active":""; })
-      .append("a")
-        .attr("href", function(d) { return "#languages/" + d; })
-        .text(function(d) { return d; })
-        .on("click", function() {
-          $("#language-list li").removeClass("active");
-          $(this).parent().addClass("active")
-          return true;
-        });
-  });
+  d3.select("#language-list").selectAll("li")
+    .data(LANGUAGES).enter()
+    .append("li")
+      .attr("class", function(d) { return d === "All"?"active":""; })
+    .append("a")
+      .attr("href", function(d) { return "#languages/" + d; })
+      .text(function(d) { return d; })
+      .attr("id", function(d) { return "languages-"+d; })
+      .on("click", function() {
+        $("#language-list li").removeClass("active");
+        $(this).parent().addClass("active")
+        return true;
+      });
 
   // Load repositories into a select input
-  d3.json("data/repositories.json", function(data) {
-    d3.select("#repository-list")
-      .on("change", function() {
-          
-        })
-      .selectAll("option")
-      .data(data).enter()
-      .append("option")
-        .text(function(d) { return d; });
-  });
+  d3.select("#repository-list")
+    .on("change", function() {
+        window.location.hash = "#repositories/" + $(this).val();
+      })
+    .selectAll("option")
+    .data(REPOSITORIES).enter()
+    .append("option")
+      .attr("value", function(d) { return d; })
+      .text(function(d) { return d; });
 
-
-  // Press the language button if neither button are pressed
-  if($("#filter-selector button.active").length === 0) {
-    $("#language-btn").button('toggle');
-  }
-
-  $("#filter-selector button").click(function() {
+  $("#filter-selector button").on("click", function() {
     $(".radio-filter").hide();
     $("#" + $(this).attr("data-elem")).show();
   });
 
-  d3.json("data/repositories/twitter__bootstrap.json", function(data) {
+  var redraw_map = function(data) {
+    svg.selectAll(".location").remove();
     var scale = d3.scale.log().domain([1, 1000]).range([2, 15]);
 
     function contributions(d) {
@@ -224,7 +285,43 @@ $(document).ready(function() {
           .on("mouseout", function(d) {
             tooltip.style("display", "none");
         });
-  });
+  };
+
+  var langregex = /^\#languages\/([a-zA-Z0-9\-\+\.]+)$/
+  var reporegex = /^\#repositories\/([a-zA-Z0-9\-\+\.\/]+)$/    // TODO: doens't handle unicode/weird names at all
+  var hashchangehandler = function() {
+    var langres = langregex.exec(window.location.hash);
+    var repores = reporegex.exec(window.location.hash);
+    var url = "data/";
+    $("#filter-selector button").removeClass("active");
+    if(langres !== null) {
+      var lang = langres[1];
+      $("#language-btn").trigger('click');
+      $("#language-list li").removeClass("active");
+      $("#languages-"+lang).parent().addClass("active");
+      url += "languages/" + lang + ".json";
+    } else if(repores !== null) {
+      var repo = repores[1];
+      $("#repository-btn").trigger('click');
+      $("#repository-list").val(repo);
+      url += "repositories/" + repo + ".json";
+    } else {
+      // Invalid anchor!
+      return;
+    }
+
+    d3.json(url, redraw_map);
+  }
+  $(window).on("hashchange", hashchangehandler);
+
+
+  // Default page to load is all languages
+  if(window.location.hash === "") {
+    window.location.hash = "#languages/All";
+  } else {
+    hashchangehandler();
+  }
+
 });
 
 </script>
