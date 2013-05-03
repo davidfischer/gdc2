@@ -60,6 +60,7 @@
 
 .dot:hover {
   fill: orange;
+  fill-opacity: 0.8;
 }
 
 #tooltip p {
@@ -260,8 +261,7 @@ $(document).ready(function() {
   });
 
   var redraw_map = function(data) {
-    svg.selectAll(".location").remove();
-    var scale = d3.scale.log().domain([1, 1000]).range([2, 15]);
+    var scale = d3.scale.log().domain([1, 1000]).range([2, 8]);
 
     function contributions(d) {
       var sum = 0;
@@ -273,17 +273,15 @@ $(document).ready(function() {
       return sum;
     }
 
-    var dots = svg.selectAll(".locations")
-        .data(data).enter().append("g")
-        .attr("class", "location")
+    var dots = svg.selectAll(".dots")
+        .data(data).enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("r", function(d) { return scale(contributions(d)); })
         .attr("transform", function(d) {
           var coord = [d.lng, d.lat];
           return "translate(" + projection(coord).join(",") + ")";
-        });
-
-    dots.append("circle")
-        .attr("class", "dot")
-        .attr("r", function(d) { return scale(contributions(d)); })
+        })
         .on("mouseover", function(d) {
           var m = d3.mouse(d3.select("body").node());
           tooltip.style("display", null)
@@ -320,6 +318,8 @@ $(document).ready(function() {
       return;
     }
 
+    // TODO: transition
+    svg.selectAll("circle.dot").transition().delay(250).style("fill-opacity", 0).remove();
     d3.json(url, redraw_map);
   }
   $(window).on("hashchange", hashchangehandler);
