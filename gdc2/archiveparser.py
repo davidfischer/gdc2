@@ -44,6 +44,8 @@ class GitHubArchiveParser(object):
         """
 
         with open(self.filename, 'r') as f:
+            # Assumes one JSON object per line which isn't true of older
+            # githubarchive.org JSON files
             for i, line in gzip.GzipFile(fileobj=f):
                 # There are occasionally records with invalid utf-8
                 # See: https://github.com/igrigorik/githubarchive.org/issues/25
