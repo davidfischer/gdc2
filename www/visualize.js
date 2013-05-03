@@ -1,4 +1,8 @@
+/*jslint browser: true, vars: true, white: true, indent: 2 */
+
 $(document).ready(function() {
+  "use strict";
+
   var GITHUB_EVENT_TYPES = [
     "GistEvent",
     "PushEvent",
@@ -17,9 +21,7 @@ $(document).ready(function() {
     "PullRequestReviewCommentEvent",
     "PublicEvent",
     "ForkApplyEvent"
-  ];
-
-  var LANGUAGES = [
+  ], LANGUAGES = [
     "All",
     "JavaScript",
     "Ruby",
@@ -31,9 +33,7 @@ $(document).ready(function() {
     "C++",
     "Perl",
     "Objective-C"
-  ];
-
-  var REPOSITORIES = [
+  ], REPOSITORIES = [
     "",
     "twitter/bootstrap",
     "octocat/Spoon-Knife",
@@ -87,13 +87,10 @@ $(document).ready(function() {
     "facebook/three20"
   ];
 
-  // Always in proportion of 960x500 for full size
-  var width = 960,
-      height = 500;
+  var width = 960, height = 500;
 
   var projection = d3.geo.wagner6()
-      .scale(150)
-      .precision(.1);
+      .scale(150);
 
   var path = d3.geo.path()
       .projection(projection);
@@ -122,7 +119,7 @@ $(document).ready(function() {
       .attr("class", "graticule")
       .attr("d", path);
 
-  d3.json("world-110m.json", function(error, world) {
+  d3.json("world-110m.json", function(world) {
     svg.insert("path", ".graticule")
         .datum(topojson.object(world, world.objects.land))
         .attr("class", "land")
@@ -134,7 +131,7 @@ $(document).ready(function() {
         .attr("d", path);
   });
 
-  d3.select(self.frameElement).style("height", height + "px");
+  //d3.select(self.frameElement).style("height", height + "px");
 
   var tooltip = d3.select("body").append("div")
       .attr("id", "tooltip")
@@ -145,14 +142,14 @@ $(document).ready(function() {
   d3.select("#language-list").selectAll("li")
     .data(LANGUAGES).enter()
     .append("li")
-      .attr("class", function(d) { return d === "All"?"active":""; })
+      .attr("class", function(d) { return d === "All" ? "active" : ""; })
     .append("a")
       .attr("href", function(d) { return "#languages/" + d; })
       .text(function(d) { return d; })
-      .attr("id", function(d) { return "languages-"+d; })
+      .attr("id", function(d) { return "languages-" + d; })
       .on("click", function() {
         $("#language-list li").removeClass("active");
-        $(this).parent().addClass("active")
+        $(this).parent().addClass("active");
         return true;
       });
 
@@ -177,50 +174,51 @@ $(document).ready(function() {
 
     function contributions(d) {
       var sum = 0;
-      for(var i=0; i < GITHUB_EVENT_TYPES.length; i += 1) {
-        if(d[GITHUB_EVENT_TYPES[i]] != undefined) {
-          sum += parseInt(d[GITHUB_EVENT_TYPES[i]]);
+      var i;
+      for (i = 0; i < GITHUB_EVENT_TYPES.length; i += 1) {
+        if (d[GITHUB_EVENT_TYPES[i]] !== undefined) {
+          sum += parseInt(d[GITHUB_EVENT_TYPES[i]], 10);
         }
       }
       return sum;
     }
 
-    var dots = svg.selectAll(".dots")
-        .data(data).enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", function(d) { return scale(contributions(d)); })
-        .attr("transform", function(d) {
-          var coord = [d.lng, d.lat];
-          return "translate(" + projection(coord).join(",") + ")";
+    svg.selectAll(".dots")
+      .data(data).enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("r", function(d) { return scale(contributions(d)); })
+      .attr("transform", function(d) {
+        var coord = [d.lng, d.lat];
+        return "translate(" + projection(coord).join(",") + ")";
+      })
+      .on("mouseover", function(d) {
+        var m = d3.mouse(d3.select("body").node());
+        tooltip.style("display", null)
+            .style("left", m[0] + 30 + "px")
+            .style("top", m[1] - 20 + "px")
+            .html(["<p><label>Location:</label>" + d.name + "</p>",
+                   "<p><label>Contributions:</label>" + contributions(d) + "</p>"].join(""));
         })
-        .on("mouseover", function(d) {
-          var m = d3.mouse(d3.select("body").node());
-          tooltip.style("display", null)
-              .style("left", m[0] + 30 + "px")
-              .style("top", m[1] - 20 + "px")
-              .html(["<p><label>Location:</label>" + d.name + "</p>",
-                     "<p><label>Contributions:</label>" + contributions(d) + "</p>"].join(""));
-          })
-          .on("mouseout", function(d) {
-            tooltip.style("display", "none");
-        });
+        .on("mouseout", function() {
+          tooltip.style("display", "none");
+      });
   };
 
-  var langregex = /^\#languages\/([a-zA-Z0-9\-\+\.]+)$/
-  var reporegex = /^\#repositories\/([a-zA-Z0-9\-\+\.\/]+)$/    // TODO: doens't handle unicode/weird names at all
+  var langregex = /^\#languages\/([a-zA-Z0-9\-\+\.]+)$/;
+  var reporegex = /^\#repositories\/([a-zA-Z0-9\-\+\.\/]+)$/;    // TODO: doens't handle unicode/weird names at all
   var hashchangehandler = function() {
     var langres = langregex.exec(window.location.hash);
     var repores = reporegex.exec(window.location.hash);
     var url = "data/";
     $("#filter-selector button").removeClass("active");
-    if(langres !== null) {
+    if (langres !== null) {
       var lang = langres[1];
       $("#language-btn").trigger('click');
       $("#language-list li").removeClass("active");
-      $("#languages-"+lang).parent().addClass("active");
+      $("#languages-" + lang).parent().addClass("active");
       url += "languages/" + lang + ".json";
-    } else if(repores !== null) {
+    } else if (repores !== null) {
       var repo = repores[1];
       $("#repository-btn").trigger('click');
       $("#repository-list").val(repo);
@@ -233,12 +231,12 @@ $(document).ready(function() {
     // TODO: transition
     svg.selectAll("circle.dot").transition().delay(250).style("fill-opacity", 0).remove();
     d3.json(url, redraw_map);
-  }
+  };
   $(window).on("hashchange", hashchangehandler);
 
 
   // Default page to load is all languages
-  if(window.location.hash === "") {
+  if (window.location.hash === "") {
     window.location.hash = "#languages/All";
   } else {
     hashchangehandler();
