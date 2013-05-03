@@ -43,10 +43,10 @@ class GitHubArchiveParser(object):
         @raises IOError on invalid gzip archive file
         """
 
-        with open(self.filename, 'r') as f:
+        with open(self.filepath, 'r') as f:
             # Assumes one JSON object per line which isn't true of older
             # githubarchive.org JSON files
-            for i, line in gzip.GzipFile(fileobj=f):
+            for i, line in enumerate(gzip.GzipFile(fileobj=f)):
                 # There are occasionally records with invalid utf-8
                 # See: https://github.com/igrigorik/githubarchive.org/issues/25
                 line = line.decode('utf-8', errors='ignore')
