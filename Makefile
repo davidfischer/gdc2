@@ -1,4 +1,4 @@
-.PHONY: locations alllanguages languages repositories githubarchive
+.PHONY: locations alllanguages languages repositories githubarchive tests
 
 REPOSITORIES = rails/rails
 LANGUAGES = JavaScript Ruby Java Python Shell PHP C C++ Perl Objective-C
@@ -33,3 +33,6 @@ githubarchive:
 
 	# Requires bash 4+ MacOS users may need to update
 	cd githubarchive && wget http://data.githubarchive.org/2013-{01..04}-{01..31}-{0..23}.json.gz
+
+tests:
+	nosetests
