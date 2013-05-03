@@ -8,6 +8,9 @@ from sqlalchemy.orm import sessionmaker
 from models import Base, GitHubEvent
 from archiveparser import GitHubArchiveParser
 
+FORMAT = '%(asctime)-15s %(message)s'
+logging.basicConfig(format=FORMAT)
+
 
 
 if __name__ == '__main__':

@@ -53,4 +53,4 @@ class GitHubArchiveParser(object):
                 try:
                     yield self._flatten(json.loads(line))
                 except ValueError:
-                    logger.exception('JSON parse error on line: {0}\n{1}'.format(i, line))
+                    logger.exception('JSON parse error on line: {0}'.format(i))
