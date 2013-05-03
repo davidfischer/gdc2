@@ -1,4 +1,4 @@
-.PHONY: locations alllanguages languages repositories
+.PHONY: locations alllanguages languages repositories githubarchive
 
 REPOSITORIES = rails/rails
 LANGUAGES = JavaScript Ruby Java Python Shell PHP C C++ Perl Objective-C
@@ -27,3 +27,9 @@ repositories:
 		python scripts/github-data-fetch.py --repo $$repo --outfile www/data/repositories/$$repo.json ; \
 	done
 
+githubarchive:
+	@echo "Downloading githubarchive.org data"
+	mkdir -p githubarchive
+
+	# Requires bash 4+ MacOS users may need to update
+	cd githubarchive && wget http://data.githubarchive.org/2013-{01..04}-{01..31}-{0..23}.json.gz
