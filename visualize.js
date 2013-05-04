@@ -268,9 +268,11 @@ $(document).ready(function() {
       .attr("id", "tooltip")
       .style("display", "none")
       .style("position", "absolute")
-      .html(["<p id=\"tt_location\"><label>Location:</label><span id=\"tt_location_value\"></span></p>",
-             "<p id=\"tt_contributions\"><label>Contributions:</label><span id=\"tt_contributions_value\"></span></p>",
-             "<p id=\"tt_contributors\"><label>Top contributors:</label><span id=\"tt_contributors_value\"></span></p>"].join("")
+      .html(["<p><label>Location:</label><span id=\"tt_location_value\"></span></p>",
+             "<p><label>Contributions:</label><span id=\"tt_contributions_value\"></span></p>",
+             "<p class=\"tt_all_only\"><label>Top contributors:</label><span id=\"tt_contributors_value\"></span></p>",
+             "<p class=\"tt_all_only\"><label>Top repositories:</label><span id=\"tt_repositories_value\"></span></p>",
+             "<p class=\"tt_all_only\"><label>Top languages:</label><span id=\"tt_languages_value\"></span></p>"].join("")
       )
 
   // Load languages into clickable links
@@ -362,6 +364,20 @@ $(document).ready(function() {
       return contribs > 0 ? allscale(contribs) : 0;
     }
 
+    // Returns top 3 keys in an object by comparing numeric values
+    var topthree = function(d) {
+      var sortable = [];
+      for (var r in d) {
+        sortable.push([r, d[r]]);
+      }
+      sortable = sortable.sort(function(a, b) {return b[1] - a[1]}).slice(0, 3);
+
+      return $.map(sortable, function(o) {
+        var re = /^[^\/]+\//
+        return o[0].replace(re, "");
+      });
+    };
+
 
     if ($("circle.dot").length > 0) {
       svg.selectAll("circle.dot")
@@ -386,10 +402,14 @@ $(document).ready(function() {
             $("#tt_location_value").text(d["name"]);
             $("#tt_contributions_value").text(contributions(d));
             if (getlang() === "All") {
-              $("#tt_contributors").show();
+              $(".tt_all_only").show();
               $("#tt_contributors_value").text(d["users"].join(", "));
+
+              // top repositories
+              $("#tt_repositories_value").text(topthree(d["repositories"]).join(", "));
+              $("#tt_languages_value").text(topthree(d["languages"]).join(", "));
             } else {
-              $("#tt_contributors").hide();
+              $(".tt_all_only").hide();
             }
             })
             .on("mouseout", function() {
