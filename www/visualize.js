@@ -40,7 +40,6 @@ $(document).ready(function() {
     "mrdoob/three.js",
     "django/django",
     "harvesthq/chosen",
-    "phonegap/phonegap-plugins",
     "blueimp/jQuery-File-Upload",
     "imathis/octopress",
     "hakimel/reveal.js",
@@ -58,14 +57,165 @@ $(document).ready(function() {
     "git/git",
     "AFNetworking/AFNetworking",
     "addyosmani/todomvc",
-    "cloudhead/less.js",
     "spree/spree",
+    "cloudhead/less.js",
     "facebook/facebook-php-sdk",
     "plataformatec/devise",
-    "saasbook/typo",
     "FortAwesome/Font-Awesome",
     "JakeWharton/ActionBarSherlock",
-    "facebook/three20"
+    "facebook/three20",
+    "douglascrockford/JSON-js",
+    "antirez/redis",
+    "visionmedia/express",
+    "textmate/textmate",
+    "carhartl/jquery-cookie",
+    "facebook/facebook-ios-sdk",
+    "documentcloud/underscore",
+    "cakephp/cakephp",
+    "emberjs/ember.js",
+    "xbmc/xbmc",
+    "necolas/normalize.css",
+    "github/game-off-2012",
+    "facebook/php-sdk",
+    "progit/progit",
+    "LearnBoost/socket.io",
+    "laravel/laravel",
+    "gregbell/active_admin",
+    "discourse/discourse",
+    "facebook/tornado",
+    "ajaxorg/ace",
+    "CocoaPods/Specs",
+    "bigbluebutton/bigbluebutton",
+    "Shopify/active_merchant",
+    "github/markup",
+    "mailchimp/Email-Blueprints",
+    "mangos/server",
+    "mangos/MaNGOS-Foundation",
+    "mitsuhiko/flask",
+    "browsermedia/browsercms",
+    "facebook/facebook-android-sdk",
+    "learnstreet-dev/learnstreet",
+    "thoughtbot/paperclip",
+    "uavana/android",
+    "midgetspy/Sick-Beard",
+    "jfeinstein10/SlidingMenu",
+    "Bukkit/CraftBukkit",
+    "RestKit/RestKit",
+    "meteor/meteor",
+    "yiisoft/yii",
+    "KellyMahan/android_frameworks_base",
+    "Widen/fine-uploader",
+    "Modernizr/Modernizr",
+    "wbond/package_control_channel",
+    "ivaynberg/select2",
+    "valums/file-uploader",
+    "remy/html5demos",
+    "SpringSource/spring-framework",
+    "sferik/rails_admin",
+    "resque/resque",
+    "playframework/Play20",
+    "pokeb/asi-http-request",
+    "refinery/refinerycms",
+    "technomancy/emacs-starter-kit",
+    "jdg/MBProgressHUD",
+    "OpenGG/OpenGG",
+    "github/hubot-scripts",
+    "ruby/ruby",
+    "daneden/animate.css",
+    "defunkt/resque",
+    "mozilla/pdf.js",
+    "bitcoin/bitcoin",
+    "kohsuke/hudson",
+    "kennethreitz/requests",
+    "nathanmarz/storm",
+    "ajaxorg/cloud9",
+    "sintaxi/phonegap",
+    "janl/mustache.js",
+    "moodle/moodle",
+    "jashkenas/coffee-script",
+    "cocos2d/cocos2d-x",
+    "opscode/cookbooks",
+    "bmizerany/sinatra",
+    "elasticsearch/elasticsearch",
+    "symfony/symfony-docs",
+    "reddit/reddit",
+    "mongoid/mongoid",
+    "neo/ruby_koans",
+    "mongodb/mongo",
+    "libgdx/libgdx",
+    "php/php-src",
+    "Leaflet/Leaflet",
+    "WordPress/WordPress",
+    "boto/boto",
+    "github/hubot",
+    "opscode/chef",
+    "edgecase/ruby_koans",
+    "retlehs/roots",
+    "scottjehl/Respond",
+    "svenfuchs/rails-i18n",
+    "fog/fog",
+    "Khan/khan-exercises",
+    "TTimo/doom3.gpl",
+    "ariya/phantomjs",
+    "Bukkit/Bukkit",
+    "tobi/delayed_job",
+    "holman/dotfiles",
+    "github/github-services",
+    "JakeWharton/Android-ViewPagerIndicator",
+    "mozilla/BrowserQuest",
+    "rapid7/metasploit-framework",
+    "github/android",
+    "mitchellh/vagrant",
+    "lockitron/selfstarter",
+    "wildfly/wildfly",
+    "nnnick/Chart.js",
+    "jbossas/jboss-as",
+    "eternicode/bootstrap-datepicker",
+    "addyosmani/backbone-fundamentals",
+    "rs/SDWebImage",
+    "jzaefferer/jquery-validation",
+    "thomasdavis/backbonetutorials",
+    "mozilla-b2g/gaia",
+    "madrobby/zepto",
+    "divio/django-cms",
+    "olton/Metro-UI-CSS",
+    "BradLarson/GPUImage",
+    "doctrine/doctrine2",
+    "chriseppstein/compass",
+    "edavis10/redmine",
+    "johnezang/JSONKit",
+    "timrwood/moment",
+    "cocos2d/cocos2d-iphone",
+    "android/platform_frameworks_base",
+    "arduino/Arduino",
+    "chriskempson/tomorrow-theme",
+    "Netflix/Cloud-Prize",
+    "facebook/hiphop-php",
+    "DmitryBaranovskiy/raphael",
+    "mono/MonoGame",
+    "altercation/solarized",
+    "angular/angular-seed",
+    "venomous0x/WhatsAPI",
+    "mleibman/SlickGrid",
+    "toastdriven/django-tastypie",
+    "SignalR/SignalR",
+    "desandro/masonry",
+    "carlhuda/bundler",
+    "ryanb/dotfiles",
+    "daproy/android_packages_apps_Settings",
+    "marijnh/CodeMirror",
+    "astaxie/build-web-application-with-golang",
+    "loopj/jquery-tokeninput",
+    "blasten/turn.js",
+    "visionmedia/jade",
+    "seajs/seajs",
+    "pyrocms/pyrocms",
+    "nvie/gitflow",
+    "cucumber/cucumber",
+    "appcelerator/titanium_mobile",
+    "zencoder/video-js",
+    "fatfreecrm/fat_free_crm",
+    "jnicklas/capybara"
   ];
 
   var width = 960, height = 500;
@@ -154,41 +304,37 @@ $(document).ready(function() {
     $("#" + $(this).attr("data-elem")).show();
   });
 
-  var getlang = function() {
-    var langregex = /^\#languages\/([a-zA-Z0-9\-\+\.]+)$/;
-    var langres = langregex.exec(window.location.hash);
 
-    if (langres !== null) {
-      return langres[1];
-    }
-    return null;
-  };
-
-  var getrepo = function() {
-    // TODO: doens't handle unicode/weird names at all
-    var reporegex = /^\#repositories\/([a-zA-Z0-9\-\+\.\/]+)$/;
-    var repores = reporegex.exec(window.location.hash);
-
-    if (repores !== null) {
-      return repores[1];
-    }
-    return null;
-  }
-
-  
-  
   var hashchangehandler = function() {
-    var lang = getlang();
-    var repo = getrepo();
+    var getlang = function() {
+      var langregex = /^\#languages\/([a-zA-Z0-9\-\+\_\.]+)$/;
+      var langres = langregex.exec(window.location.hash);
+
+      if (langres !== null) {
+        return langres[1];
+      }
+      return null;
+    };
+
+    var getrepo = function() {
+      // TODO: doens't handle non-ascii names at all
+      var reporegex = /^\#repositories\/([a-zA-Z0-9\-\_\+\.\/]+)$/;
+      var repores = reporegex.exec(window.location.hash);
+
+      if (repores !== null) {
+        return repores[1];
+      }
+      return null;
+    }
 
     $("#filter-selector button").removeClass("active");
-    if (lang !== null) {
+    if (getlang() !== null) {
       $("#language-btn").trigger('click');
       $("#language-list li").removeClass("active");
-      $("#languages-" + lang.replace(/\+/g, "_")).parent().addClass("active");
-    } else if (repo !== null) {
+      $("#languages-" + getlang()).parent().addClass("active");
+    } else if (getrepo() !== null) {
       $("#repository-btn").trigger('click');
-      $("#repository-list").val(repo);
+      $("#repository-list").val(getrepo());
     } else {
       // Invalid anchor!
       return;
@@ -199,13 +345,14 @@ $(document).ready(function() {
       var sum = 0, key;
 
       if (lang !== null && lang !== "All") {
+        lang = lang.replace(/_/g, "+")
         return lang in d["languages"] ? d["languages"][lang] : 0;
       } else if (repo !== null) {
         return repo in d["repositories"] ? d["repositories"][repo] : 0;
       }
 
-      for (key in d['repositories']) {
-        sum += d['repositories'][key];
+      for (key in d['languages']) {
+        sum += d['languages'][key];
       }
       return sum;
     };
