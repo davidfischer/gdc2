@@ -41,3 +41,4 @@ venv
 
 # Ignore github archive directory
 githubarchive
+.csv
