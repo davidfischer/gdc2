@@ -13,4 +13,4 @@ Credits
 * Inspired by earlier work by [Jens Finnäs](http://jensfinnas.com/dataist/ows/)
   and [Nanda Yadav](http://visual.ly/visualizing-nfl-draft-history)
 
-* Built with [d3](d3js.org) by Mike Bostock
+* Built with [d3](http://d3js.org) by Mike Bostock
