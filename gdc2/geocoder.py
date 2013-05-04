@@ -53,7 +53,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     locations = []
-    OUTFILE = 'locations.json'
+    OUTFILE = 'www/data/locations.json'
     try:
         with open(OUTFILE, 'r') as f:
             outs = json.loads(f.read())
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     with open(sys.argv[1]) as f:
         reader = unicodecsv.DictReader(f)
         for row in reader:
-            line = row['actor_attributes_location']
+            line = row['location']
             locations.append(' '.join(line.replace(',', ' ').replace('.', ' ').split()))
 
     newlocations = [l for l in locations if l not in outs.keys()]
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             time.sleep(1)
 
         if i % 10 == 0:
-            print " - %d / %d" %(i, len(len(newlocations)))
+            print " - %d / %d" %(i, len(newlocations))
 
     with open(OUTFILE, 'w') as f:
         f.write(json.dumps(outs, indent=1))
