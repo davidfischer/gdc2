@@ -1,4 +1,4 @@
-.PHONY: githubarchive tests loaddb jsonify geocode
+.PHONY: githubarchive tests loaddb jsonify geocode github
 
 
 all: tests
@@ -29,6 +29,11 @@ geocode:
 	sqlite3 github-events.db < queries/locations.sql > locations.csv
 	python gdc2/geocoder.py locations.csv
 	@echo "www/data/locations.json written"
+
+
+github:
+	ghp-import www
+	git push origin gh-pages
 
 
 tests:
