@@ -1,4 +1,4 @@
-.PHONY: githubarchive tests loaddb
+.PHONY: githubarchive tests loaddb jsonify
 
 
 all: tests
@@ -17,6 +17,12 @@ githubarchive:
 
 	# Requires bash 4+ MacOS users may need to update or something
 	cd githubarchive && wget http://data.githubarchive.org/2013-{01..04}-{01..31}-{0..23}.json.gz
+
+
+jsonify:
+	sqlite3 github-events.db < queries/events.sql > events.csv
+	python gdc2/jsonify.py events.csv
+	@echo "www/data/events.json written"
 
 
 tests:
