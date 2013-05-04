@@ -1,4 +1,4 @@
-.PHONY: githubarchive tests loaddb jsonify
+.PHONY: githubarchive tests loaddb jsonify geocode
 
 
 all: tests
@@ -23,6 +23,12 @@ jsonify:
 	sqlite3 github-events.db < queries/events.sql > events.csv
 	python gdc2/jsonify.py events.csv
 	@echo "www/data/events.json written"
+
+
+geocode:
+	sqlite3 github-events.db < queries/locations.sql > locations.csv
+	python gdc2/geocoder.py locations.csv
+	@echo "www/data/locations.json written"
 
 
 tests:
