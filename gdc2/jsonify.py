@@ -20,7 +20,7 @@ def format_repo(repo_url):
     return repo_url.replace('https://github.com/', '')
 
 def location_data(location):
-    if location in LOCATIONS and len(LOCATIONS[location]) > 0:
+    if location in LOCATIONS and LOCATIONS[location] is not None and len(LOCATIONS[location]) > 0:
         lat = float(LOCATIONS[location][0]['lat'])
         lng = float(LOCATIONS[location][0]['lon'])
         return (lat, lng)
