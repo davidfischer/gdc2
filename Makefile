@@ -1,38 +1,23 @@
-.PHONY: locations alllanguages languages repositories githubarchive tests
-
-REPOSITORIES = rails/rails
-LANGUAGES = JavaScript Ruby Java Python Shell PHP C C++ Perl Objective-C
+.PHONY: githubarchive tests loaddb
 
 
-all: alllanguages languages repositories
+all: tests
 
-locations:
-	@echo "Fetching location data. This takes hours if this is the first time"
-	python scripts/github-data-fetch.py --locations --outfile www/data/locations.json
 
-alllanguages:
-	@echo "Fetching data for all languages"
-	python scripts/github-data-fetch.py --outfile www/data/languages/All.json
+# Must have required Python packages
+loaddb:
+	@echo "Loading githubarchive data into local database."
+	@echo "One month of data takes about one hour on my SSD."
+	python gdc2/loaddb.py
 
-languages:
-	@echo "Fetching language data"
-	for lang in $(LANGUAGES); do \
-		python scripts/github-data-fetch.py --language $$lang --outfile www/data/languages/$$lang.json ; \
-	done
-
-repositories:
-	@echo "Fetching data for repositories"
-	for repo in $(REPOSITORIES); do \
-		
-		python scripts/github-data-fetch.py --repo $$repo --outfile www/data/repositories/$$repo.json ; \
-	done
 
 githubarchive:
-	@echo "Downloading githubarchive.org data"
+	@echo "Downloading githubarchive.org data. This takes hours."
 	mkdir -p githubarchive
 
-	# Requires bash 4+ MacOS users may need to update
+	# Requires bash 4+ MacOS users may need to update or something
 	cd githubarchive && wget http://data.githubarchive.org/2013-{01..04}-{01..31}-{0..23}.json.gz
+
 
 tests:
 	nosetests
