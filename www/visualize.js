@@ -3,36 +3,17 @@
 $(document).ready(function() {
   "use strict";
 
-  var GITHUB_EVENT_TYPES = [
-    "GistEvent",
-    "PushEvent",
-    "CreateEvent",
-    "PullRequestEvent",
-    "ForkEvent",
-    "DeleteEvent",
-    "IssuesEvent",
-    "WatchEvent",
-    "IssueCommentEvent",
-    "GollumEvent",
-    "DownloadEvent",
-    "FollowEvent",
-    "CommitCommentEvent",
-    "MemberEvent",
-    "PullRequestReviewCommentEvent",
-    "PublicEvent",
-    "ForkApplyEvent"
-  ], LANGUAGES = [
+  var LANGUAGES = [
     "All",
     "JavaScript",
     "Ruby",
-    "Java",
     "Python",
-    "Shell",
     "PHP",
-    "C",
+    "Shell",
+    "Java",
+    "Objective-C",
     "C++",
-    "Perl",
-    "Objective-C"
+    "C"
   ], REPOSITORIES = [
     "",
     "twitter/bootstrap",
@@ -101,6 +82,8 @@ $(document).ready(function() {
       .attr("width", width)
       .attr("height", height);
 
+  var allscale = d3.scale.log().domain([1, 500]).range([2, 15]);
+
   svg.append("defs").append("path")
       .datum({type: "Sphere"})
       .attr("id", "sphere")
@@ -131,12 +114,14 @@ $(document).ready(function() {
         .attr("d", path);
   });
 
-  //d3.select(self.frameElement).style("height", height + "px");
-
   var tooltip = d3.select("body").append("div")
       .attr("id", "tooltip")
       .style("display", "none")
-      .style("position", "absolute");
+      .style("position", "absolute")
+      .html(["<p id=\"tt_location\"><label>Location:</label><span id=\"tt_location_value\"></span></p>",
+             "<p id=\"tt_contributions\"><label>Contributions:</label><span id=\"tt_contributions_value\"></span></p>",
+             "<p id=\"tt_contributors\"><label>Top contributors:</label><span id=\"tt_contributors_value\"></span></p>"].join("")
+      )
 
   // Load languages into clickable links
   d3.select("#language-list").selectAll("li")
@@ -144,9 +129,9 @@ $(document).ready(function() {
     .append("li")
       .attr("class", function(d) { return d === "All" ? "active" : ""; })
     .append("a")
-      .attr("href", function(d) { return "#languages/" + d; })
+      .attr("href", function(d) { return "#languages/" + d.replace(/\+/g, "_"); })
       .text(function(d) { return d; })
-      .attr("id", function(d) { return "languages-" + d; })
+      .attr("id", function(d) { return "languages-" + d.replace(/\+/g, "_"); })
       .on("click", function() {
         $("#language-list li").removeClass("active");
         $(this).parent().addClass("active");
@@ -169,68 +154,102 @@ $(document).ready(function() {
     $("#" + $(this).attr("data-elem")).show();
   });
 
-  var redraw_map = function(data) {
-    var scale = d3.scale.log().domain([1, 1000]).range([2, 8]);
+  var getlang = function() {
+    var langregex = /^\#languages\/([a-zA-Z0-9\-\+\.]+)$/;
+    var langres = langregex.exec(window.location.hash);
 
-    function contributions(d) {
-      var sum = 0;
-      var i;
-      for (i = 0; i < GITHUB_EVENT_TYPES.length; i += 1) {
-        if (d[GITHUB_EVENT_TYPES[i]] !== undefined) {
-          sum += parseInt(d[GITHUB_EVENT_TYPES[i]], 10);
-        }
-      }
-      return sum;
+    if (langres !== null) {
+      return langres[1];
     }
-
-    svg.selectAll(".dots")
-      .data(data).enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("r", function(d) { return scale(contributions(d)); })
-      .attr("transform", function(d) {
-        var coord = [d.lng, d.lat];
-        return "translate(" + projection(coord).join(",") + ")";
-      })
-      .on("mouseover", function(d) {
-        var m = d3.mouse(d3.select("body").node());
-        tooltip.style("display", null)
-            .style("left", m[0] + 30 + "px")
-            .style("top", m[1] - 20 + "px")
-            .html(["<p><label>Location:</label>" + d.name + "</p>",
-                   "<p><label>Contributions:</label>" + contributions(d) + "</p>"].join(""));
-        })
-        .on("mouseout", function() {
-          tooltip.style("display", "none");
-      });
+    return null;
   };
 
-  var langregex = /^\#languages\/([a-zA-Z0-9\-\+\.]+)$/;
-  var reporegex = /^\#repositories\/([a-zA-Z0-9\-\+\.\/]+)$/;    // TODO: doens't handle unicode/weird names at all
-  var hashchangehandler = function() {
-    var langres = langregex.exec(window.location.hash);
+  var getrepo = function() {
+    // TODO: doens't handle unicode/weird names at all
+    var reporegex = /^\#repositories\/([a-zA-Z0-9\-\+\.\/]+)$/;
     var repores = reporegex.exec(window.location.hash);
-    var url = "data/";
+
+    if (repores !== null) {
+      return repores[1];
+    }
+    return null;
+  }
+
+  
+  
+  var hashchangehandler = function() {
+    var lang = getlang();
+    var repo = getrepo();
+
     $("#filter-selector button").removeClass("active");
-    if (langres !== null) {
-      var lang = langres[1];
+    if (lang !== null) {
       $("#language-btn").trigger('click');
       $("#language-list li").removeClass("active");
-      $("#languages-" + lang).parent().addClass("active");
-      url += "languages/" + lang + ".json";
-    } else if (repores !== null) {
-      var repo = repores[1];
+      $("#languages-" + lang.replace(/\+/g, "_")).parent().addClass("active");
+    } else if (repo !== null) {
       $("#repository-btn").trigger('click');
       $("#repository-list").val(repo);
-      url += "repositories/" + repo + ".json";
     } else {
       // Invalid anchor!
       return;
     }
 
-    // TODO: transition
-    svg.selectAll("circle.dot").transition().delay(250).style("fill-opacity", 0).remove();
-    d3.json(url, redraw_map);
+    var contributions = function (d) {
+      var lang = getlang(), repo = getrepo();
+      var sum = 0, key;
+
+      if (lang !== null && lang !== "All") {
+        return lang in d["languages"] ? d["languages"][lang] : 0;
+      } else if (repo !== null) {
+        return repo in d["repositories"] ? d["repositories"][repo] : 0;
+      }
+
+      for (key in d['repositories']) {
+        sum += d['repositories'][key];
+      }
+      return sum;
+    };
+
+    var scaler = function(d) {
+      var contribs = contributions(d);
+      return contribs > 0 ? allscale(contribs) : 0;
+    }
+
+
+    if ($("circle.dot").length > 0) {
+      svg.selectAll("circle.dot")
+        .transition()
+        .attr("r", scaler);
+    } else {
+      d3.json("data/events.json", function (data) {
+        svg.selectAll(".dots")
+          .data(data).enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("r", scaler)
+          .attr("transform", function(d) {
+            var coord = [d['lng'], d['lat']];
+            return "translate(" + projection(coord).join(",") + ")";
+          })
+          .on("mouseover", function(d) {
+            var m = d3.mouse(d3.select("body").node());
+            tooltip.style("display", null)
+                .style("left", m[0] + 30 + "px")
+                .style("top", m[1] - 20 + "px");
+            $("#tt_location_value").text(d["name"]);
+            $("#tt_contributions_value").text(contributions(d));
+            if (getlang() === "All") {
+              $("#tt_contributors").show();
+              $("#tt_contributors_value").text(d["users"].join(", "));
+            } else {
+              $("#tt_contributors").hide();
+            }
+            })
+            .on("mouseout", function() {
+              tooltip.style("display", "none");
+            });
+      });
+    }
   };
   $(window).on("hashchange", hashchangehandler);
 
