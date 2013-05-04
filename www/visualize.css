@@ -26,8 +26,8 @@
 }
 
 .dot {
-  fill: steelblue;
-  fill-opacity: 0.5;
+  fill: #084081;
+  fill-opacity: 0.3;
 }
 
 .dot:hover {
