@@ -230,9 +230,14 @@ $(document).ready(function() {
 
   var svg = d3.select("#vis").append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .call(d3.behavior.zoom()
+        .scaleExtent([150, 1000])
+        .translate(projection.translate())
+        .scale(projection.scale())
+        .on("zoom", redraw));
 
-  var allscale = d3.scale.log().domain([1, 500]).range([2, 15]);
+  var allscale = d3.scale.log().domain([1, 500]).range([3, 20]);
 
   svg.append("defs").append("path")
       .datum({type: "Sphere"})
@@ -427,5 +432,24 @@ $(document).ready(function() {
   } else {
     hashchangehandler();
   }
+
+  function redraw() {
+    if (d3.event) {
+      projection
+          .translate(d3.event.translate)
+          .scale(d3.event.scale);
+    }
+
+    // Redraw circles!
+    d3.selectAll("circle.dot")
+        .attr("transform", function(d) {
+          var coord = [d['lng'], d['lat']];
+          return "translate(" + projection(coord).join(",") + ")";
+        });
+
+    svg.selectAll("path").attr("d", path);
+    var t = projection.translate();
+  }
+
 
 });
