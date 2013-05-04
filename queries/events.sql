@@ -19,8 +19,8 @@ WHERE
     'PullRequestEvent',
     'PushEvent'
   )
-  AND repository_url IN (
-    SELECT DISTINCT(repository_url)
+  AND repository_name IN (
+    SELECT DISTINCT(repository_name)
     FROM event
     WHERE repository_fork = 0
     ORDER BY repository_forks
