@@ -270,7 +270,8 @@ $(document).ready(function() {
       .style("position", "absolute")
       .html(["<p id=\"tt_location\"><label>Location:</label><span id=\"tt_location_value\"></span></p>",
              "<p id=\"tt_contributions\"><label>Contributions:</label><span id=\"tt_contributions_value\"></span></p>",
-             "<p id=\"tt_contributors\"><label>Top contributors:</label><span id=\"tt_contributors_value\"></span></p>"].join("")
+             "<p id=\"tt_contributors\"><label>Top contributors:</label><span id=\"tt_contributors_value\"></span></p>",
+             "<p id=\"tt_repositories\"><label>Top repositories:</label><span id=\"tt_repositories_value\"></span></p>"].join("")
       )
 
   // Load languages into clickable links
@@ -388,8 +389,22 @@ $(document).ready(function() {
             if (getlang() === "All") {
               $("#tt_contributors").show();
               $("#tt_contributors_value").text(d["users"].join(", "));
+
+              // top repositories
+              $("#tt_repositories").show();
+              var sortable = [];
+              for (var r in d["repositories"]) {
+                sortable.push([r, d["repositories"][r]]);
+              }
+              sortable = sortable.sort(function(a, b) {return b[1] - a[1]}).slice(0, 3);
+
+              $("#tt_repositories_value").text($.map(sortable, function(o) {
+                var re = /^[^\/]+\//
+                return o[0].replace(re, "");
+              }).join(", "));
             } else {
               $("#tt_contributors").hide();
+              $("#tt_repositories").hide();
             }
             })
             .on("mouseout", function() {
