@@ -1,0 +1,56 @@
+.stroke {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1px;
+}
+
+.fill {
+  fill: #fff;
+}
+
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .2;
+}
+
+.land {
+  fill: #aaa;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+.dot {
+  fill: steelblue;
+  fill-opacity: 0.5;
+}
+
+.dot:hover {
+  fill: orange;
+  fill-opacity: 0.8;
+}
+
+#tooltip p {
+  clear: both;
+  margin: 4px 0;
+}
+
+#tooltip {
+  background-color: rgba(242, 242, 242, 0.6);
+  border: 1px solid #666;
+  padding: 5px;
+}
+
+#tooltip label {
+  display: block;
+  float: left;
+  width: 150px;
+  text-align: right;
+  font-weight: bold;
+  padding-right: 10px;
+}
