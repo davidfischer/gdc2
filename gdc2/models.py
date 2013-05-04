@@ -18,6 +18,7 @@ class GitHubEvent(Base):
     actor_attributes_gravatar_id = Column(String)
     actor_attributes_location = Column(String, index=True)
     repository_name = Column(String)
+    repository_url = Column(String, index=True)
     repository_fork = Column(Boolean)
     repository_language = Column(String, index=True)
     repository_forks = Column(Integer)
