@@ -35,3 +35,9 @@ bigquery.p12
 
 # Ignore virtualenv
 venv
+
+# Ignore database file
+*.db
+
+# Ignore github archive directory
+githubarchive
