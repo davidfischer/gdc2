@@ -278,7 +278,7 @@ $(document).ready(function() {
              "<p class=\"tt_all_only\"><label>Top contributors:</label><span id=\"tt_contributors_value\"></span></p>",
              "<p class=\"tt_all_only\"><label>Top repositories:</label><span id=\"tt_repositories_value\"></span></p>",
              "<p class=\"tt_all_only\"><label>Top languages:</label><span id=\"tt_languages_value\"></span></p>"].join("")
-      )
+      );
 
   // Load languages into clickable links
   d3.select("#language-list").selectAll("li")
@@ -332,7 +332,7 @@ $(document).ready(function() {
         return repores[1];
       }
       return null;
-    }
+    };
 
     $("#filter-selector button").removeClass("active");
     if (getlang() !== null) {
@@ -352,7 +352,7 @@ $(document).ready(function() {
       var sum = 0, key;
 
       if (lang !== null && lang !== "All") {
-        lang = lang.replace(/_/g, "+")
+        lang = lang.replace(/_/g, "+");
         return lang in d["languages"] ? d["languages"][lang] : 0;
       } else if (repo !== null) {
         return repo in d["repositories"] ? d["repositories"][repo] : 0;
@@ -367,7 +367,7 @@ $(document).ready(function() {
     var scaler = function(d) {
       var contribs = contributions(d);
       return contribs > 0 ? allscale(contribs) : 0;
-    }
+    };
 
     // Returns top 3 keys in an object by comparing numeric values
     var topthree = function(d) {
