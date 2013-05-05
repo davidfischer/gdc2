@@ -17,9 +17,22 @@ The provided Makefile has everything needed to fetch data from
 geocode locations and output the resulting JSON. It can even push
 the results to GitHub pages.
 
-There are also some interesting queries for doing things like fetching
+There are also some interesting `queries` for doing things like fetching
 top 200 repositories, gathering up all the relevant events or getting
 the unique set of locations to geocode.
+
+    # This first step takes hours and downloads ~6.5GB
+    make githubarchive
+
+    # This step takes a few hours with decently fast disks
+    make loaddb
+
+    # This step geocodes any locations not already geocoded (`locations.json`)
+    make geocode
+
+    # Generate the `events.json` file used for the visualization
+    make jsonify
+
 
 
 Credits
