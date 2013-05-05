@@ -12,10 +12,10 @@ TIMEOUT = 30 # seconds
 # Copyright (c) OpenStreetMap Contributors
 def nominatim(location):
     """
-Returns a lat/lng pair for a location or None
+    Returns a lat/lng pair for a location or None
 
-This should be called no more than once per sec
-"""
+    This should be called no more than once per sec
+    """
 
     args = {
         'q': location,
@@ -41,8 +41,8 @@ This should be called no more than once per sec
 
 def geocode(location):
     """
-Returns a lat/lng pair for a location or None
-"""
+    Returns a lat/lng pair for a location or None
+    """
 
     return nominatim(location)
 
