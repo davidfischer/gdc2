@@ -4,6 +4,8 @@ import sys
 
 import unicodecsv
 
+logger = logging.getLogger(__name__)
+
 
 try:
     with open('www/data/locations.json', 'r') as f:
@@ -66,6 +68,7 @@ def main(filepath):
             data[loc]['lng'] is not None and \
             len(data[loc]['name']) > 0:
 
+            # Gets the top 3 users for each location
             data[loc]['users'] = [u[0] for u in sorted(data[loc]['users'].items(), lambda x, y: cmp(y[1], x[1]))][:3]
             output.append(data[loc])
 
