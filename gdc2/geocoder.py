@@ -71,7 +71,7 @@ if __name__ == '__main__':
     print "Geocoding %d new locations" %len(newlocations)
     for i, location in enumerate(newlocations):
         # Geocode locations we have not previously geocoded
-        if not location in outs or outs[location] not None:
+        if not location in outs or outs[location] is None:
             outs[location] = geocode(location)
             time.sleep(1)   # Nominatim should be called only once per sec
 
