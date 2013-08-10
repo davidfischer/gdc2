@@ -49,7 +49,7 @@ class GitHubArchiveParser(object):
             for i, line in enumerate(gzip.GzipFile(fileobj=f)):
                 # There are occasionally records with invalid utf-8
                 # See: https://github.com/igrigorik/githubarchive.org/issues/25
-                line = line.decode('utf-8', errors='ignore')
+                line = line.decode('utf-8', 'ignore')
                 try:
                     yield self._flatten(json.loads(line))
                 except ValueError:
